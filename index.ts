@@ -18,11 +18,15 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 //  Routes
 app.use("/github/webhooks", githubRouter);
 
-const { SERVER_PORT_PRODUCTION, SERVER_PORT_DEVELOPMENT, NODE_ENV } = process.env;
-if ((NODE_ENV !== "test" && SERVER_PORT_DEVELOPMENT) || SERVER_PORT_PRODUCTION) {
+const { PORT: SERVER_PORT_PRODUCTION, SERVER_PORT_DEVELOPMENT, NODE_ENV } = process.env;
+let useBackedPort = false;
+if (NODE_ENV !== "test" && (SERVER_PORT_DEVELOPMENT || SERVER_PORT_PRODUCTION)) {
   let PORT = Number(NODE_ENV === "production" ? SERVER_PORT_PRODUCTION : SERVER_PORT_DEVELOPMENT);
-  if (!PORT) PORT = BACKED_PORT;
-  app.listen(PORT, () => console.log(`Bot server backed up in port ${PORT}`));
+  if (!PORT) {
+    PORT = BACKED_PORT;
+    useBackedPort = true;
+  }
+  app.listen(PORT, () => console.log(`Bot server ${useBackedPort ? "backed up" : "booted"} in port ${PORT}`));
 }
 
 //  BOT Stuff
