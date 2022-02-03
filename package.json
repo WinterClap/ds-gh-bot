@@ -4,11 +4,10 @@
   "description": "A bot to integrate Discord and GitHub",
   "main": "index.ts",
   "scripts": {
-    "start": "npm run build && NODE_ENV=production node dist/index.js",
+    "start": "npm i rimraf && npm run build && NODE_ENV=production node dist/index.js",
     "dev": "NODE_ENV=development nodemon index.ts",
     "build": "rimraf ./dist && tsc",
-    "test": "NODE_ENV=test jest",
-    "rimraf": "./node_modules/rimraf/bin.js"
+    "test": "NODE_ENV=test jest"
   },
   "repository": {
     "type": "git",
