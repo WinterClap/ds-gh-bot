@@ -21,7 +21,7 @@ const { SERVER_PORT_PRODUCTION, SERVER_PORT_DEVELOPMENT, NODE_ENV } = process.en
 if ((NODE_ENV !== "test" && SERVER_PORT_DEVELOPMENT) || SERVER_PORT_PRODUCTION) {
   let PORT = Number(NODE_ENV === "production" ? SERVER_PORT_PRODUCTION : SERVER_PORT_DEVELOPMENT);
   if (!PORT) PORT = BACKED_PORT;
-  app.listen(BACKED_PORT, () => console.log(`Bot server backed up in port ${PORT}`));
+  app.listen(PORT, () => console.log(`Bot server backed up in port ${PORT}`));
 }
 
 //  BOT Stuff
