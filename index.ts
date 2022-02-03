@@ -4,7 +4,7 @@ import { Client, Intents } from "discord.js";
 import express, { Request, Response, NextFunction } from "express";
 
 const app = express();
-
+const BACKED_PORT = 5000;
 //  Universal Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -18,10 +18,11 @@ app.get("/testing", (req: Request, res: Response, next: NextFunction) => {
 app.use("/github/webhooks", githubRouter);
 
 const { SERVER_PORT_PRODUCTION, SERVER_PORT_DEVELOPMENT, NODE_ENV } = process.env;
-const PORT =
-  NODE_ENV !== "test" ? (NODE_ENV === "production" ? SERVER_PORT_PRODUCTION : SERVER_PORT_DEVELOPMENT) : null;
-
-PORT && app.listen(PORT, () => console.log(`Bot Server initiated in port ${PORT}.`));
+if ((NODE_ENV !== "test" && SERVER_PORT_DEVELOPMENT) || SERVER_PORT_PRODUCTION) {
+  let PORT = Number(NODE_ENV === "production" ? SERVER_PORT_PRODUCTION : SERVER_PORT_DEVELOPMENT);
+  if (!PORT) PORT = BACKED_PORT;
+  app.listen(BACKED_PORT, () => console.log(`Bot server backed up in port ${PORT}`));
+}
 
 //  BOT Stuff
 const intents = new Intents().add(
