@@ -5,6 +5,7 @@ import express, { Request, Response, NextFunction } from "express";
 
 const app = express();
 const BACKED_PORT = 5000;
+
 //  Universal Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
