@@ -10,8 +10,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //  Universal endpoints
-app.get("/testing", (req: Request, res: Response, next: NextFunction) => {
-  console.log("/testing route is working");
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  console.log("/ route is working");
+  res.json("/ route is working.");
 });
 
 //  Routes
