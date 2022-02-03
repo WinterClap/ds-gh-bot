@@ -14,7 +14,10 @@
     "type": "git",
     "url": "git+https://github.com/WinterClap/ds-gh-bot.git"
   },
-  "author": "",
+  "engines": {
+    "node": "16.13.2"
+  },
+  "author": "Santiago",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/WinterClap/ds-gh-bot/issues"
