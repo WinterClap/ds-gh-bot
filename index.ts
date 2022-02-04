@@ -1,10 +1,11 @@
-import { githubRouter } from "./routes/github.routes";
+import { githubRouter } from "./routes/githubPullRequest.routes";
 import "dotenv/config";
 import { Client, Intents } from "discord.js";
 import express, { Request, Response, NextFunction } from "express";
 
 const app = express();
 const BACKED_PORT = 5000;
+
 //  Universal Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -16,8 +17,9 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 });
 
 //  Routes
-app.use("/github/webhooks", githubRouter);
+app.use("/github/pull-request", githubRouter);
 
+//  Initialization
 const { PORT: SERVER_PORT_PRODUCTION, SERVER_PORT_DEVELOPMENT, NODE_ENV } = process.env;
 let useBackedPort = false;
 if (NODE_ENV !== "test" && (SERVER_PORT_DEVELOPMENT || SERVER_PORT_PRODUCTION)) {
