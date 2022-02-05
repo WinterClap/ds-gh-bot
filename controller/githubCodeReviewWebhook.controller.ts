@@ -1,6 +1,7 @@
-import { EmbedMessageInterface } from "./../utils/botUtils";
+import { CODE_REVIEW_INITIAL_MESSAGE } from "./../utils/globalConstants";
 import { Request } from "express";
-import { say, sayEmbed } from "../utils/botUtils";
+import { say, sayEmbed, EmbedMessageInterface } from "../utils/botUtils";
+import { EmbedFieldData } from "discord.js";
 
 export const isPullRequestBodyValid = (req: Request) => {
   const isValid =
@@ -40,37 +41,39 @@ const getJiraTicket = (pullRequesTitle: string) => {
   return matchedText || null;
 };
 
-const getEmbed = (req: Request): EmbedMessageInterface => {
+const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
   const jiraTicket = getJiraTicket(req.body.issue.title);
   const { title, author, pullRequestBody, triggeringComment, pullRequestURL, pullRequestNumber, userImageURL } =
     getInformationFromRequest(req);
   let jiraContent: string | undefined;
-
   if (jiraTicket) {
     jiraContent = `https://share-hub.atlassian.net/browse/${jiraTicket}`;
   } else {
     jiraContent =
-      "Invalid Pull Request Title: Missing 'SH-[TicketNumber]' sequence. Please edit your Pull Request and ask for code-review again.' ";
+      "Invalid Pull Request Title: Missing 'SH-[TicketNumber]' sequence. Please edit your Pull Request and ask for code-review again.";
   }
+
+  const fields: EmbedFieldData[] = [
+    { name: "Author", value: author },
+    { name: "Jira issue", value: jiraContent },
+    { name: "GitHub PR:", value: pullRequestURL },
+  ];
+  pullRequestBody && fields.push({ name: "Thread: ", value: pullRequestBody });
 
   return {
     title,
     description: triggeringComment,
-    type: "informative",
-    fields: [
-      { name: "Author", value: author },
-      { name: "Jira issue", value: jiraContent },
-      { name: "GitHub PR:", value: pullRequestURL },
-    ],
+    type: jiraTicket ? "informative" : "error",
+    fields,
     footer: {
-      text: `This code-review request was triggered by PR No.${pullRequestNumber} by ${author}`,
+      text: `This code-review request was triggered in PR No.${pullRequestNumber} by ${author}`,
       iconURL: userImageURL,
     },
   };
 };
 
 export const publishCodeReviewToChannel = (req: Request, channelId: string) => {
-  const embed = getEmbed(req);
-  say("@here New Code Review, bitcheees", channelId);
+  const embed = getCodeReviewEmbed(req);
+  say(`@here ${CODE_REVIEW_INITIAL_MESSAGE}`, channelId);
   sayEmbed(embed, channelId);
 };

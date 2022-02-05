@@ -1,6 +1,6 @@
 import { Message, MessageEmbed, TextChannel, TextChannelResolvable, EmbedFieldData } from "discord.js";
 import { client } from "./../index";
-import { BOT_EMBED_MESSAGES_COLORS, CODE_REVIEW_TITLE_EMBED_MESSAGE } from "./globalConstants";
+import { BOT_EMBED_MESSAGES_COLORS } from "./globalConstants";
 
 export const say = (phrase: string, channelID: string) => {
   (client.channels.cache.get(channelID) as TextChannel).send(`${phrase ? phrase : "mother fuckers"}`);

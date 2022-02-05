@@ -13,4 +13,4 @@ export const BOT_EMBED_MESSAGES_COLORS: BOT_EMBED_MESSAGES_COLORS_INTERFACE = {
   error: "RED",
 };
 
-export const CODE_REVIEW_TITLE_EMBED_MESSAGE = "New code-review request!";
+export const CODE_REVIEW_INITIAL_MESSAGE = "New Code Review, bitcheees";

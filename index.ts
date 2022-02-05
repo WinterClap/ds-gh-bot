@@ -41,7 +41,7 @@ const intents = new Intents().add(
 );
 
 export const client = new Client({
-  partials: ["MESSAGE"],
+  partials: ["MESSAGE", "CHANNEL", "REACTION"],
   intents,
 });
 
@@ -51,6 +51,8 @@ client.login(process.env.BOT_TOKEN);
 
 client.on("messageCreate", (message) => {
   if (message.author.bot) return;
-  const triggerWords = ["María", "Elisa", "Pedro", "Santiago"];
-  triggerWords.includes(message.content) ? message.react("❤️") : message.channel.send("Ah?");
+  const triggerLikedWords = ["María", "Elisa", "Santiago"];
+  const triggerHatedWords = ["Pedro", "pedro"];
+  triggerLikedWords.includes(message.content) && message.react("❤️");
+  triggerHatedWords.includes(message.content) && message.react("🚩") && message.react("💀");
 });
