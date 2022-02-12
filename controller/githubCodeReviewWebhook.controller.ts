@@ -29,6 +29,7 @@ const getInformationFromRequest = (req: Request) => {
     title: req.body.issue.title,
     pullRequestNumber: req.body.issue.number,
     author: req.body.issue.user.login,
+    commentAuthor: req.body.comment.user.login,
     pullRequestBody: req.body.issue.body,
     pullRequestURL: req.body.issue.html_url,
     triggeringComment: req.body.comment.body,
@@ -42,8 +43,16 @@ const getJiraTicket = (pullRequesTitle: string) => {
 
 const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
   const jiraTicket = getJiraTicket(req.body.issue.title);
-  const { title, author, pullRequestBody, triggeringComment, pullRequestURL, pullRequestNumber, userImageURL } =
-    getInformationFromRequest(req);
+  const {
+    title,
+    author,
+    commentAuthor,
+    pullRequestBody,
+    triggeringComment,
+    pullRequestURL,
+    pullRequestNumber,
+    userImageURL,
+  } = getInformationFromRequest(req);
   let jiraContent: string | undefined;
   if (jiraTicket) {
     jiraContent = `https://share-hub.atlassian.net/browse/${jiraTicket}`;
@@ -65,7 +74,7 @@ const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
     type: jiraTicket ? "informative" : "error",
     fields,
     footer: {
-      text: `This code-review request was triggered in PR No.${pullRequestNumber} by ${author}`,
+      text: `This code-review request was triggered in PR No.${pullRequestNumber} by ${commentAuthor}`,
       iconURL: userImageURL,
     },
   };
