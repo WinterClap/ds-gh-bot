@@ -17,10 +17,9 @@ export const isPullRequestBodyValid = (req: Request) => {
     req.body.issue.title &&
     req.body.issue.number &&
     req.body.issue.user.login &&
-    req.body.issue.body &&
     req.body.issue.html_url &&
     req.body.comment.body &&
-    req.body.issue.user.avatar_url;
+    req.body.comment.user.avatar_url;
 
   return isValid;
 };
@@ -33,7 +32,7 @@ const getInformationFromRequest = (req: Request) => {
     pullRequestBody: req.body.issue.body,
     pullRequestURL: req.body.issue.html_url,
     triggeringComment: req.body.comment.body,
-    userImageURL: req.body.issue.user.avatar_url,
+    userImageURL: req.body.comment.user.avatar_url,
   };
 };
 const getJiraTicket = (pullRequesTitle: string) => {
