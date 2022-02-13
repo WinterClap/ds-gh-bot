@@ -19,12 +19,13 @@ export const isPullRequestBodyValid = (req: Request) => {
     req.body.issue.user.login &&
     req.body.issue.html_url &&
     req.body.comment.body &&
-    req.body.comment.user.avatar_url;
+    req.body.comment.user.avatar_url &&
+    true;
 
   return isValid;
 };
 
-const getInformationFromRequest = (req: Request) => {
+export const getInformationFromRequest = (req: Request) => {
   return {
     title: req.body.issue.title,
     pullRequestNumber: req.body.issue.number,
@@ -36,12 +37,12 @@ const getInformationFromRequest = (req: Request) => {
     userImageURL: req.body.comment.user.avatar_url,
   };
 };
-const getJiraTicket = (pullRequesTitle: string) => {
+export const getJiraTicket = (pullRequesTitle: string) => {
   const matchedText = pullRequesTitle.match(/SH-\d+/);
   return matchedText || null;
 };
 
-const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
+export const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
   const jiraTicket = getJiraTicket(req.body.issue.title);
   const {
     title,

@@ -3,7 +3,7 @@ import "dotenv/config";
 import { Client, Intents } from "discord.js";
 import express, { Request, Response, NextFunction } from "express";
 
-const app = express();
+export const app = express();
 const BACKED_PORT = 5000;
 
 //  Universal Middlewares
