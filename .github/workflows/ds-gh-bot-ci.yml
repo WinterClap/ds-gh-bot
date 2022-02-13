@@ -3,6 +3,8 @@ name: PR Action - CD
 on:
   pull_request:
     branches: [master]
+  push:
+    branhces: [master]
 
 jobs:
   CD_Primary_Action-Testing_and_Linter:
