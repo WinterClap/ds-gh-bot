@@ -1,11 +1,15 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"esModuleInterop": true,
-		"sourceMap": true,
-		"target": "es6",
-		"moduleResolution": "node",
-		"outDir": "dist"
-	},
-	"exclude": ["node_modules", "**./*.test.ts"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "./",
+    "removeComments": true,
+    "preserveConstEnums": true
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules", "tests/", "**/*.test.ts"]
 }

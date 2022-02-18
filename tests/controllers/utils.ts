@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { EmbedMessageInterface } from "./../../utils/botUtils";
 import { Request } from "express";
 import {
@@ -259,7 +260,7 @@ export const correctInformationObject: ReturnType<typeof getInformationFromReque
   userImageURL: "https://avatars.githubusercontent.com/u/69702579?v=4",
   triggeringComment: "Third code-review request, maybe?",
 };
-
+/* istanbul ignore next */
 export const correctGeneratedEmbedMessage = ({
   isPRTitleValid,
   hasPRBody,
@@ -291,6 +292,6 @@ export const correctGeneratedEmbedMessage = ({
       iconURL: correctInformationObject.userImageURL,
     },
   };
-  hasPRBody && embed.fields.push({ name: "Thread: ", value: PRBody });
+  hasPRBody && embed?.fields?.push({ name: "Thread: ", value: PRBody });
   return embed;
 };

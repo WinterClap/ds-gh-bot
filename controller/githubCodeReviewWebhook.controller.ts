@@ -2,6 +2,7 @@ import { CODE_REVIEW_INITIAL_MESSAGE } from "./../utils/globalConstants";
 import { Request } from "express";
 import { say, sayEmbed, EmbedMessageInterface } from "../utils/botUtils";
 import { EmbedFieldData } from "discord.js";
+import { client } from "../app";
 
 export const isPullRequestBodyValid = (req: Request) => {
   const isValid =
@@ -81,8 +82,8 @@ export const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
   };
 };
 
-export const publishCodeReviewToChannel = (req: Request, channelId: string) => {
+export const publishCodeReviewToChannel = async (req: Request, channelId: string) => {
   const embed = getCodeReviewEmbed(req);
-  say(`@here ${CODE_REVIEW_INITIAL_MESSAGE}`, channelId);
-  sayEmbed(embed, channelId);
+  await say(client, channelId, `@here ${CODE_REVIEW_INITIAL_MESSAGE}`);
+  await sayEmbed(client, embed, channelId);
 };

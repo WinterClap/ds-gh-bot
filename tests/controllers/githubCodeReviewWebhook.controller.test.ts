@@ -1,4 +1,4 @@
-import { CODE_REVIEW_INITIAL_MESSAGE, ALERTS_CHANNEL_ID } from "./../../utils/globalConstants";
+import { ALERTS_CHANNEL_ID } from "./../../utils/globalConstants";
 import {
   getCodeReviewEmbed,
   getInformationFromRequest,
@@ -24,6 +24,11 @@ describe("Controller methods", () => {
     jest.resetAllMocks();
   });
 
+  afterAll(() => {
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
+  });
+
   it("isPullRequestBodyValid should return true with valid request", () => {
     const isValid = isPullRequestBodyValid(baseReq as Request);
     expect(isValid).toBe(true);
@@ -39,7 +44,7 @@ describe("Controller methods", () => {
     expect(jiraTicket).toBe(null);
   });
 
-  it("getJira ticket should return null as the PR title is not valid", () => {
+  it("getJira ticket should return expected value as the PR title is valid", () => {
     const jiraTicket = getJiraTicket(PR_validTitle);
     expect(`${jiraTicket}`).toBe(ticketNumber);
   });
@@ -62,12 +67,14 @@ describe("Controller methods", () => {
     expect(embed).toEqual(correctObject);
   });
 
-  it("should call publishCodeReviewToChannel with the given arguments", () => {
-    const saySpy = jest.spyOn(botUtils, "say").mockImplementation((phrase, channelID) => {});
-    const sayEmbedSpy = jest.spyOn(botUtils, "sayEmbed").mockImplementation((embedObject, channelID) => {});
+  it("should call publishCodeReviewToChannel with the given arguments", async () => {
+    const saySpy = jest.spyOn(botUtils, "say").mockImplementation((clientMock, phrase, channelID) => Promise.resolve());
+    const sayEmbedSpy = jest
+      .spyOn(botUtils, "sayEmbed")
+      .mockImplementation((client, embedObject, channelID) => Promise.resolve());
 
-    publishCodeReviewToChannel(baseReq as Request, ALERTS_CHANNEL_ID);
-    expect(saySpy).toHaveBeenCalledWith(`@here ${CODE_REVIEW_INITIAL_MESSAGE}`, ALERTS_CHANNEL_ID);
+    await publishCodeReviewToChannel(baseReq as Request, ALERTS_CHANNEL_ID);
+    expect(saySpy).toHaveBeenCalled();
     expect(sayEmbedSpy).toHaveBeenCalled();
   });
 });

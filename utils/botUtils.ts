@@ -1,8 +1,7 @@
-import { Message, MessageEmbed, TextChannel, TextChannelResolvable, EmbedFieldData } from "discord.js";
-import { client } from "./../index";
+import { MessageEmbed, TextChannel, EmbedFieldData, Client } from "discord.js";
 import { BOT_EMBED_MESSAGES_COLORS } from "./globalConstants";
 
-export const say = (phrase: string, channelID: string) => {
+export const say = async (client: Client<boolean>, channelID: string, phrase?: string) => {
   (client.channels.cache.get(channelID) as TextChannel).send(`${phrase ? phrase : "mother fuckers"}`);
 };
 
@@ -14,7 +13,11 @@ export interface EmbedMessageInterface {
   footer?: { text: string; iconURL?: string };
 }
 
-export const sayEmbed = ({ type, title, description, footer, fields }: EmbedMessageInterface, channelID: string) => {
+export const sayEmbed = async (
+  client: Client<boolean>,
+  { type, title, description, footer, fields }: EmbedMessageInterface,
+  channelID: string
+) => {
   const embed = new MessageEmbed()
     .setColor(BOT_EMBED_MESSAGES_COLORS[type])
     .setTitle(title)
