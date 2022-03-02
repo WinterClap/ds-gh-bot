@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { EmbedMessageInterface } from "./../../utils/botUtils";
+import { EmbedMessageInterface } from "../../bot/utils/botUtils";
 import { Request } from "express";
 import {
   getInformationFromRequest,

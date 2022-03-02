@@ -1,8 +1,9 @@
+import { saySimpleEmbed } from "./../bot/utils/botUtils";
 import { CODE_REVIEW_INITIAL_MESSAGE } from "./../utils/globalConstants";
 import { Request } from "express";
-import { say, sayEmbed, EmbedMessageInterface } from "../utils/botUtils";
-import { EmbedFieldData } from "discord.js";
-import { client } from "../app";
+import { say, sayEmbed, EmbedMessageInterface } from "../bot/utils/botUtils";
+import { Client, EmbedFieldData, Message, MessageEmbed, TextChannel, ThreadChannel } from "discord.js";
+import { client } from "../bot";
 
 export const isPullRequestBodyValid = (req: Request) => {
   const isValid =
@@ -85,5 +86,35 @@ export const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
 export const publishCodeReviewToChannel = async (req: Request, channelId: string) => {
   const embed = getCodeReviewEmbed(req);
   await say(client, channelId, `@here ${CODE_REVIEW_INITIAL_MESSAGE}`);
-  await sayEmbed(client, embed, channelId);
+  return await sayEmbed(client, embed, channelId);
+};
+
+export const createThreadFromMessage = async (message: Message) => {
+  if (message.embeds[0].fields.filter((field) => field.value.startsWith("https://")).length !== 2) return;
+  return message.startThread({
+    name: message.embeds[0].title.replace(":", " ·"),
+    autoArchiveDuration: "MAX",
+  });
+};
+
+export const createMessageInThread = async (req: Request, channelID: string, client: Client) => {
+  const jiraTicket = getJiraTicket(req.body.issue.title);
+  const comment = req.body.comment.body;
+  const { commentAuthor: author, userImageURL } = getInformationFromRequest(req);
+  try {
+    const { threads } = await (client.channels.cache.get(channelID) as TextChannel).threads.fetchActive();
+    const [thread] = Array.from(threads.filter((thread) => thread.name.startsWith(`${jiraTicket}`)));
+    const embed = new MessageEmbed()
+      .setAuthor({ name: author, iconURL: userImageURL })
+      .setDescription(`New comment from ${author} in GH: ${comment}`);
+    await (thread[thread.length - 1] as ThreadChannel).send({ embeds: [embed] });
+  } catch (error) {
+    return await saySimpleEmbed(
+      client,
+      `Error trying to publish GitHub comment in thread for ticket ${jiraTicket}: ${error.message}`,
+      channelID,
+      { name: author, iconURL: userImageURL },
+      { type: "error" }
+    );
+  }
 };

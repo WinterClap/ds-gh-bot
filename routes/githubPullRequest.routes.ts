@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { webhookPullRequestGeneralMiddleware, codeReviewMiddleware } from "../middlewares/webhookMiddlewares";
+import {
+  webhookPullRequestGeneralMiddleware,
+  codeReviewMiddleware,
+  codeReviewTrackingMiddleware,
+} from "../middlewares/webhookMiddlewares";
 
 export const githubRouter = Router();
 
@@ -13,4 +17,10 @@ const codeReviewFinal = (req: Request, res: Response) => {
   res.json({ message: "Received", status: res.statusCode });
 };
 //  Route Endpoints
-githubRouter.post("/code-review", webhookPullRequestGeneralMiddleware, codeReviewMiddleware, codeReviewFinal);
+githubRouter.post(
+  "/code-review",
+  webhookPullRequestGeneralMiddleware,
+  codeReviewMiddleware,
+  codeReviewTrackingMiddleware,
+  codeReviewFinal
+);

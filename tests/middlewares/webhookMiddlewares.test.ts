@@ -1,7 +1,9 @@
+import { Message, ThreadChannel } from "discord.js";
 import {
   error400BadRequestResponse,
   server200Response,
   server200ResponseNoPRComment,
+  server200ResposePRcomment,
 } from "./../../utils/serverResponses";
 import { Request, Response, NextFunction } from "express";
 import * as codeReviewControllers from "../../controller/githubCodeReviewWebhook.controller";
@@ -49,7 +51,7 @@ describe("Middlewares", () => {
     it("should respond with default200Response response for a request with body.action value other than 'created'.", () => {
       const publishCodeReviewToChannelSpy = jest
         .spyOn(codeReviewControllers, "publishCodeReviewToChannel")
-        .mockImplementation(() => Promise.resolve());
+        .mockImplementation(() => Promise.resolve("messageInstace" as unknown as Message));
 
       req = { body: { action: "action-name-different-than-created" } };
 
@@ -57,24 +59,15 @@ describe("Middlewares", () => {
       expect(res.json).toHaveBeenCalledWith(server200ResponseNoPRComment);
       expect(publishCodeReviewToChannelSpy).not.toHaveBeenCalled();
     });
-    it("should respond with default200NoPRResponse for a request with body.action value of 'created' with invalid/false code-review request.", () => {
-      const publishCodeReviewToChannelSpy = jest
-        .spyOn(codeReviewControllers, "publishCodeReviewToChannel")
-        .mockImplementation(() => Promise.resolve());
-
-      req = { body: { action: "created", comment: { body: "Not a CR request comment." } } };
-
-      codeReviewMiddleware(req as Request, res as Response, next as NextFunction);
-      expect(res.json).toHaveBeenCalledWith(server200ResponseNoPRComment);
-      expect(publishCodeReviewToChannelSpy).not.toHaveBeenCalled();
-      expect(next).not.toHaveBeenCalled();
-    });
 
     it("should respond with default200NoPRRequest for a request with body.action value of 'created' with valid/positive code-review request. ", async () => {
       const publishCodeReviewToChannelSpy = jest
         .spyOn(codeReviewControllers, "publishCodeReviewToChannel")
-        .mockImplementation(() => Promise.resolve());
+        .mockImplementation(() => Promise.resolve("messageInstance" as unknown as Message));
       req = { body: { action: "created", comment: { body: "Indeed a code-review request comment." } } };
+      const createThreadFromMessageSpy = jest
+        .spyOn(codeReviewControllers, "createThreadFromMessage")
+        .mockImplementation(() => Promise.resolve("threadInstance" as unknown as ThreadChannel));
 
       const testMiddleware = () =>
         new Promise((resolve, reject) =>
@@ -82,7 +75,8 @@ describe("Middlewares", () => {
         );
       await testMiddleware();
       // codeReviewMiddleware(req as Request, res as Response, next as NextFunction);
-      expect(publishCodeReviewToChannelSpy).toHaveBeenCalled();
+      expect(publishCodeReviewToChannelSpy).toHaveBeenCalledTimes(1);
+      expect(createThreadFromMessageSpy).toHaveBeenCalledTimes(1);
       expect(next).toHaveBeenCalled();
     });
   });
