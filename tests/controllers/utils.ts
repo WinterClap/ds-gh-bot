@@ -259,6 +259,7 @@ export const correctInformationObject: ReturnType<typeof getInformationFromReque
   title: "PR Title Testing",
   userImageURL: "https://avatars.githubusercontent.com/u/69702579?v=4",
   triggeringComment: "Third code-review request, maybe?",
+  projectIdentifier: "WinterClap/share-hub-be/7",
 };
 /* istanbul ignore next */
 export const correctGeneratedEmbedMessage = ({
@@ -278,6 +279,7 @@ export const correctGeneratedEmbedMessage = ({
     type: isPRTitleValid ? "informative" : "error",
     fields: [
       { name: "Author", value: correctInformationObject.author },
+      { name: "PR identifier", value: correctInformationObject.projectIdentifier, inline: true },
       {
         name: "Jira issue",
         value:
@@ -285,7 +287,7 @@ export const correctGeneratedEmbedMessage = ({
             ? `https://share-hub.atlassian.net/browse/${getJiraTicket(PR_validTitle)}`
             : "Invalid Pull Request Title: Missing 'SH-[TicketNumber]' sequence. Please edit your Pull Request and ask for code-review again.",
       },
-      { name: "GitHub PR:", value: correctInformationObject.pullRequestURL },
+      { name: "GitHub PR", value: correctInformationObject.pullRequestURL },
     ],
     footer: {
       text: `This code-review request was triggered in PR No.${correctInformationObject.pullRequestNumber} by ${correctInformationObject.commentAuthor}`,

@@ -5,6 +5,7 @@ import { COMMAND_PREFIX } from "./../utils/globalConstants";
 import "dotenv/config";
 import { saySimpleEmbed } from "./utils/botUtils";
 import { clearMessages } from "./commands/clear";
+import { commentInPR } from "./commands/commentInPR";
 
 const { NODE_ENV, BOT_TOKEN } = process.env;
 //  BOT Stuff
@@ -17,7 +18,7 @@ const intents = new Intents().add(
 );
 
 export const client = new Client({
-  partials: ["MESSAGE", "CHANNEL", "REACTION"],
+  partials: ["MESSAGE", "CHANNEL", "REACTION", "GUILD_MEMBER"],
   intents,
 });
 
@@ -41,7 +42,11 @@ if (NODE_ENV !== "test") {
       case COMMANDS.clear:
         clearMessages(args, message);
         break;
-
+      case COMMANDS.commentInPR:
+        commentInPR(args, message);
+        break;
+      case COMMANDS.help:
+        break;
       default:
         const defaultMessage = `Command not recognized. Type \`${COMMAND_PREFIX}help\` to see all available commands.`;
         saySimpleEmbed(

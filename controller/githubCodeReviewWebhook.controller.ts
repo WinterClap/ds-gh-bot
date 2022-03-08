@@ -28,6 +28,7 @@ export const isPullRequestBodyValid = (req: Request) => {
 };
 
 export const getInformationFromRequest = (req: Request) => {
+  const identifier = `${req.body.repository.owner.login}/${req.body.repository.name}/${req.body.issue.number}`;
   return {
     title: req.body.issue.title,
     pullRequestNumber: req.body.issue.number,
@@ -37,6 +38,7 @@ export const getInformationFromRequest = (req: Request) => {
     pullRequestURL: req.body.issue.html_url,
     triggeringComment: req.body.comment.body,
     userImageURL: req.body.comment.user.avatar_url,
+    projectIdentifier: identifier,
   };
 };
 export const getJiraTicket = (pullRequesTitle: string) => {
@@ -55,6 +57,7 @@ export const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
     pullRequestURL,
     pullRequestNumber,
     userImageURL,
+    projectIdentifier,
   } = getInformationFromRequest(req);
   let jiraContent: string | undefined;
   if (jiraTicket) {
@@ -66,8 +69,9 @@ export const getCodeReviewEmbed = (req: Request): EmbedMessageInterface => {
 
   const fields: EmbedFieldData[] = [
     { name: "Author", value: author },
+    { name: "PR identifier", value: projectIdentifier, inline: true },
     { name: "Jira issue", value: jiraContent },
-    { name: "GitHub PR:", value: pullRequestURL },
+    { name: "GitHub PR", value: pullRequestURL },
   ];
   pullRequestBody && fields.push({ name: "Thread: ", value: pullRequestBody });
 

@@ -1,4 +1,4 @@
-import { MessageEmbed, TextChannel, EmbedFieldData, Client, Message, ColorResolvable } from "discord.js";
+import { MessageEmbed, TextChannel, EmbedFieldData, Client, ColorResolvable } from "discord.js";
 import { BOT_EMBED_MESSAGES_COLORS } from "../../utils/globalConstants";
 
 export const say = async (client: Client<boolean>, channelID: string, phrase?: string) => {
